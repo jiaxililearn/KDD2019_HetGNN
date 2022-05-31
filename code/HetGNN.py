@@ -27,10 +27,33 @@ class model_class(object):
             print("neighbor set generation finish")
             exit(0)
 
-        feature_list = [input_data.p_abstract_embed, input_data.p_title_embed,
-                        input_data.p_v_net_embed, input_data.p_a_net_embed, input_data.p_ref_net_embed,
-                        input_data.p_net_embed, input_data.a_net_embed, input_data.a_text_embed,
-                        input_data.v_net_embed, input_data.v_text_embed]
+        # feature_list = [input_data.p_abstract_embed,
+        #                 input_data.p_title_embed,
+        #                 input_data.p_v_net_embed,
+        #                 input_data.p_a_net_embed,
+        #                 input_data.p_ref_net_embed,
+        #                 input_data.p_net_embed,
+        #                 input_data.a_net_embed,
+        #                 input_data.a_text_embed,
+        #                 input_data.v_net_embed,
+        #                 input_data.v_text_embed]
+
+        feature_list = [
+            input_data.a_a_edge_embed,
+            input_data.a_b_edge_embed,
+            input_data.a_c_edge_embed,
+            input_data.a_d_edge_embed,
+            input_data.a_e_edge_embed,
+            input_data.a_f_edge_embed,
+            input_data.a_g_edge_embed,
+            input_data.a_h_edge_embed,
+            input_data.b_a_edge_embed,
+            input_data.b_b_edge_embed,
+            input_data.b_c_edge_embed,
+            input_data.b_d_edge_embed,
+            input_data.b_e_edge_embed,
+            input_data.b_h_edge_embed
+        ]
 
         for i in range(len(feature_list)):
             feature_list[i] = torch.from_numpy(np.array(feature_list[i])).float()
@@ -41,15 +64,18 @@ class model_class(object):
         # self.feature_list = feature_list
 
         a_neigh_list_train = input_data.a_neigh_list_train
-        p_neigh_list_train = input_data.p_neigh_list_train
-        v_neigh_list_train = input_data.v_neigh_list_train
+        b_neigh_list_train = input_data.b_neigh_list_train
+        # v_neigh_list_train = input_data.v_neigh_list_train
 
         a_train_id_list = input_data.a_train_id_list
-        p_train_id_list = input_data.p_train_id_list
-        v_train_id_list = input_data.v_train_id_list
+        b_train_id_list = input_data.b_train_id_list
+        # v_train_id_list = input_data.v_train_id_list
 
-        self.model = tools.HetAgg(args, feature_list, a_neigh_list_train, p_neigh_list_train, v_neigh_list_train,
-                                  a_train_id_list, p_train_id_list, v_train_id_list)
+        self.model = tools.HetAgg(args, feature_list,
+                                  a_neigh_list_train,
+                                  b_neigh_list_train,
+                                  a_train_id_list,
+                                  b_train_id_list)
 
         if self.gpu:
             self.model.cuda()
@@ -102,7 +128,7 @@ class model_class(object):
                 torch.save(self.model.state_dict(), self.args.model_path +
                            "HetGNN_" + str(iter_i) + ".pt")
                 # save embeddings for evaluation
-                triple_index = 9
+                triple_index = 14
                 a_out, p_out, v_out = self.model([], triple_index)
             print('iteration ' + str(iter_i) + ' finish.')
 
