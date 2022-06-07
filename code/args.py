@@ -3,7 +3,7 @@ import argparse
 
 def read_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--data_path', type=str, default='../data/custom_data/',
+    parser.add_argument('--data_path', type=str, default='../data/custom_data_simple/',
                         help='path to data')
     parser.add_argument('--model_path', type=str, default='../model_save/',
                         help='path to save model')
@@ -17,13 +17,13 @@ def read_args():
                         help='input feature dimension')
     parser.add_argument('--embed_d', type=int, default=26,
                         help='embedding dimension')
-    parser.add_argument('--lr', type=int, default=0.001,
+    parser.add_argument('--lr', type=int, default=0.0001,
                         help='learning rate')
-    parser.add_argument('--batch_s', type=int, default=20000,
+    parser.add_argument('--batch_s', type=int, default=360,
                         help='batch size')
-    parser.add_argument('--mini_batch_s', type=int, default=32,
+    parser.add_argument('--mini_batch_s', type=int, default=360,
                         help='mini batch size')
-    parser.add_argument('--train_iter_n', type=int, default=50,
+    parser.add_argument('--train_iter_n', type=int, default=500,
                         help='max number of training iteration')
     parser.add_argument('--walk_n', type=int, default=10,
                         help='number of walk per root node')
@@ -34,7 +34,7 @@ def read_args():
     parser.add_argument("--random_seed", default=10, type=int)
     parser.add_argument('--train_test_label', type=int, default=0,
                         help='train/test label: 0 - train, 1 - test, 2 - code test/generate negative ids for evaluation')
-    parser.add_argument('--save_model_freq', type=float, default=2,
+    parser.add_argument('--save_model_freq', type=float, default=10,
                         help='number of iterations to save model')
     parser.add_argument("--cuda", default=0, type=int)
     parser.add_argument("--checkpoint", default='', type=str)
