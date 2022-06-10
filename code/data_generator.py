@@ -17,7 +17,7 @@ class input_data(object):
 
         self.n_nodes = 5044482
         self.max_num_edge_embeddings = 12
-        self.n_graphs = 599225
+        self.n_graphs = 599226
 
         # Creating neighbour embedding based on above edge embeddings
         list_train = {}
@@ -123,7 +123,6 @@ class input_data(object):
     # compute edge embedding for every graph for every source node
     def compute_edge_embeddings(self, list_train_):
         # fix the number of features embeddings in each graph to be maximum 5
-        print(f'processing neighbours of: {list_train_.keys()}')
         graph_edge_embedding = np.zeros(
             (self.n_graphs, self.max_num_edge_embeddings, self.incoming_node_embedding_size))
         for gid, neigh_dict in list_train_.items():
@@ -142,4 +141,5 @@ class input_data(object):
                         print(f'gid: {gid}')
                         print(f'neigh: {neigh}')
                         self.incoming_edge_embeddings[gid][neigh]
+        print(f'processed edge.')
         return graph_edge_embedding
