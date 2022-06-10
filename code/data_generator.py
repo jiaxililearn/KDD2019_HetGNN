@@ -90,7 +90,7 @@ class input_data(object):
 
             if gid not in graph_incoming_node_embedding.keys():
                 graph_incoming_node_embedding[gid] = np.zeros(
-                    (self.n_nodes, self.incoming_node_embedding_size))
+                    (self.n_nodes, self.incoming_node_embedding_size), dtype='float32')
             graph_incoming_node_embedding[gid][dst_id] += row[2:]
 
         self.incoming_edge_embeddings = graph_incoming_node_embedding
@@ -124,7 +124,7 @@ class input_data(object):
     def compute_edge_embeddings(self, list_train_):
         # fix the number of features embeddings in each graph to be maximum 5
         graph_edge_embedding = np.zeros(
-            (self.n_graphs, self.max_num_edge_embeddings, self.incoming_node_embedding_size))
+            (self.n_graphs, self.max_num_edge_embeddings, self.incoming_node_embedding_size), dtype='float32')
         for gid, neigh_dict in list_train_.items():
             # num_src_node = len(neigh_dict.keys())
             # graph_edge_embedding_dict[gid] = np.zeros(
