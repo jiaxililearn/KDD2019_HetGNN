@@ -1,5 +1,6 @@
 # import six.moves.cPickle as pickle
 import numpy as np
+import pandas as pd
 import os
 import string
 import json
@@ -16,7 +17,7 @@ class input_data(object):
 
         self.n_nodes = 5044482
         self.max_num_edge_embeddings = 12
-        self.n_graphs = 600
+        self.n_graphs = 599225
 
         # Creating neighbour embedding based on above edge embeddings
         list_train = {}
@@ -75,8 +76,9 @@ class input_data(object):
             self.args.data_path, "incoming_edge_embedding.csv")
 
         print(f'Reading Node Edge Embedding file {node_edge_embedding_filename}')
-        with open(node_edge_embedding_filename, 'rb') as fin:
-            node_edge_embeddings = np.loadtxt(fin, delimiter=",", skiprows=1)
+        node_edge_embeddings = pd.read_csv(node_edge_embedding_filename).to_numpy()
+        # with open(node_edge_embedding_filename, 'rb') as fin:
+        #     node_edge_embeddings = np.loadtxt(fin, delimiter=",", skiprows=1)
 
         graph_incoming_node_embedding = {}
         self.incoming_node_embedding_size = node_edge_embeddings.shape[1] - 2
@@ -92,9 +94,13 @@ class input_data(object):
             graph_incoming_node_embedding[gid][dst_id] += row[2:]
 
         self.incoming_edge_embeddings = graph_incoming_node_embedding
+        # print(graph_incoming_node_embedding[517248])
+
+        # print(self.incoming_edge_embeddings[517248])
 
         # Create neighbour edge embeddings
         print('Creating Neighbour Edge Embeddings')
+        # print(self.a_a_list_train)
         self.a_a_edge_embed = self.compute_edge_embeddings(self.a_a_list_train)
         self.a_b_edge_embed = self.compute_edge_embeddings(self.a_b_list_train)
         self.a_c_edge_embed = self.compute_edge_embeddings(self.a_c_list_train)
@@ -117,7 +123,7 @@ class input_data(object):
     # compute edge embedding for every graph for every source node
     def compute_edge_embeddings(self, list_train_):
         # fix the number of features embeddings in each graph to be maximum 5
-
+        print(f'processing neighbours of: {list_train_.keys()}')
         graph_edge_embedding = np.zeros(
             (self.n_graphs, self.max_num_edge_embeddings, self.incoming_node_embedding_size))
         for gid, neigh_dict in list_train_.items():
@@ -129,5 +135,11 @@ class input_data(object):
                 if i >= self.max_num_edge_embeddings:
                     break
                 for neigh in neigh_list:
-                    graph_edge_embedding[gid][i] += self.incoming_edge_embeddings[gid][neigh]
+                    try:
+                        graph_edge_embedding[gid][i] += self.incoming_edge_embeddings[gid][neigh]
+                    except Exception as e:
+                        print(f'i: {i}')
+                        print(f'gid: {gid}')
+                        print(f'neigh: {neigh}')
+                        self.incoming_edge_embeddings[gid][neigh]
         return graph_edge_embedding

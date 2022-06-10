@@ -2,3 +2,4 @@ model_save/*
 !model_save/.gitkeep
 code/.ipynb_checkpoints*
 code/__pycache__*
+.vscode

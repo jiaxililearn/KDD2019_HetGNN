@@ -4,11 +4,13 @@ import torch.optim as optim
 import data_generator
 import tools
 from args import read_args
-from torch.autograd import Variable
+# from torch.autograd import Variable
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import precision_recall_fscore_support, accuracy_score
 import numpy as np
 import random
+
+
 torch.set_num_threads(2)
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 

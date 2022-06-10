@@ -1,12 +1,12 @@
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-from torch.autograd import Variable
+# import torch.nn.functional as F
+# from torch.autograd import Variable
 from args import read_args
-import numpy as np
-import string
-import re
-import math
+# import numpy as np
+# import string
+# import re
+# import math
 args = read_args()
 
 
@@ -42,10 +42,11 @@ class HetAgg(nn.Module):
         self.fc_het_neigh_agg = nn.Linear(embed_d * 14, embed_d)
 
         # self.softmax = nn.Softmax(dim=1)
+        self.sigmoid = nn.Sigmoid()
         self.act = nn.LeakyReLU()
         # self.drop = nn.Dropout(p=0.5)
-        self.bn1 = nn.BatchNorm1d(embed_d * 12)
-        self.bn2 = nn.BatchNorm1d(embed_d * 14)
+        self.bn1 = nn.BatchNorm1d(embed_d)
+        self.bn2 = nn.BatchNorm1d(embed_d)
         self.embed_d = embed_d
 
     def init_weights(self):
@@ -105,6 +106,8 @@ class HetAgg(nn.Module):
         concate_embed = edge_embed.view(len(gid_batch), 1, embed_d * 12)
         concate_embed = torch.transpose(concate_embed, 0, 1)
         output = fc_agg(concate_embed)
+        # print(output)
+        # output_bn = self.bn1(output)
         # return torch.mean(output, 0)
         return self.act(output).view(len(gid_batch), embed_d)
 
@@ -139,7 +142,9 @@ class HetAgg(nn.Module):
                                b_e_agg_batch, b_h_agg_batch),
                               1).view(len(a_a_agg_batch), self.embed_d * 14)
 
-        het_agg_batch = self.act(self.fc_het_neigh_agg(agg_batch))
+        het_agg_batch = self.sigmoid(
+            self.fc_het_neigh_agg(agg_batch)
+        )
 
         # skip attention module
         # atten_w = self.act(
